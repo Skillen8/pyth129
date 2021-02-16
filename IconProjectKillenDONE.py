@@ -188,8 +188,9 @@ def main():
     # asks user to invert the grid
     user_invert = str(input("Would you like the invert the icon? (Enter Yes or No): ")).lower()
     while user_invert != "yes" and user_invert != "no":
-        print("Sorry, I only understand Yes or No")
-
+        wrong_input = input("Sorry, I only understand Yes or No")
+        user_invert = wrong_input
+       
     # aesthetic display
     print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     print("                     Making Icon...")
