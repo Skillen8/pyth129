@@ -14,13 +14,13 @@ api_key = APIKEY.__API_KEY
 
 
 def graph():
-    # picDayStart = input("Enter a date in YYYY-MM-DD: ")
-    # picDayEnd = input("enter date")
+    picDayStart = input("Enter a date in YYYY-MM-DD: ")
+    picDayEnd = input("enter date")
     params = {
         'api_key': api_key,
         'hd': 'True',
-        'start_date': '2020-03-15',
-        'end_date': '2021-03-20'
+        'start_date': picDayStart,
+        'end_date': picDayEnd
     }
 
     response = requests.get(url, params=params)
