@@ -1,26 +1,94 @@
-
 import requests
 import json
 import pandas as pd
 import APIKEY
 import math
 import statistics
+import re
 import matplotlib.pyplot as plt
-
 
 url = 'https://api.nasa.gov/planetary/apod'
 
 api_key = APIKEY.__API_KEY
 
 
+def get_date(pic_date):
+    repeat = True
+    split_input = re.split(r'\-', pic_date)
+    while repeat:
+        try:
+            if not re.match(r"(\d{4})-(\d{2})-(\d{2})", pic_date):
+                pic_date = input("Please re-enter the start date")
+            else:
+                break
+        except ValueError:
+            print("Wrong input")
+
+    year = int(split_input[0])
+    month = int(split_input[1])
+    day = int(split_input[2])
+# checks year
+    if year > 2021 or year < 1995:
+        new_year = input("Please enter a different year")
+        split_input.remove(split_input[0])
+        split_input.insert(0, new_year)
+# checks month
+    if month > 12 or month < 1:
+        new_month = input("Enter different month")
+        split_input.remove(split_input[1])
+        split_input.insert(1, new_month)
+# checks leap year
+    if month == 2:
+        if year % 4 == 0:
+            if day > 29 or day < 1:
+                new_day = input("Enter a different day")
+                split_input.remove(split_input[2])
+                split_input.insert(2, new_day)
+        else:
+            if day > 28 or day < 1:
+                new_day = input("Enter a different day")
+                split_input.remove(split_input[2])
+                split_input.insert(2, new_day)
+
+# checks august
+    elif month == 8:
+        if day > 31 or day < 1:
+            new_day = input("Enter a different day")
+            split_input.remove(split_input[2])
+            split_input.insert(2, new_day)
+
+    else:
+        if month % 2 == 0:
+            if day > 30 or day < 1:
+                new_day = input("Enter a different day")
+                split_input.remove(split_input[2])
+                split_input.insert(2, new_day)
+
+        else:
+            if day > 31 or day < 1:
+                new_day = input("Enter a different day")
+                split_input.remove(split_input[2])
+                split_input.insert(2, new_day)
+
+    pic_date = '-'.join(split_input)
+
+    if re.match(r"(\d{4})-(\d{2})-(\d{2})", pic_date):
+        return pic_date
+
+
 def graph():
-    picDayStart = input("Enter a date in YYYY-MM-DD: ")
-    picDayEnd = input("enter date")
+
+    first_date = input("Enter the start date in YYYY-MM-DD: ")
+    start_date = get_date(first_date)
+
+    second_date = input("Enter the end date in YYYY-MM-DD: ")
+    end_date = get_date(second_date)
+
     params = {
         'api_key': api_key,
         'hd': 'True',
-        'start_date': picDayStart,
-        'end_date': picDayEnd
+        'start_date': start_date,
+        'end_date': end_date
     }
 
     response = requests.get(url, params=params)
@@ -58,15 +126,14 @@ def avg_len(arr):
 
 
 def low_len(arr, arr_date):
-
     lowestLen = arr[0]
     date_count = 0
-
+    date = 0
     for length in arr:
         date_count += 1
         if length <= lowestLen:
             lowestLen = length
-            date = arr_date[date_count-1]
+            date = arr_date[date_count - 1]
 
     print("Lowest length is: ", lowestLen, "characters, and the date is:", date)
 
@@ -74,7 +141,7 @@ def low_len(arr, arr_date):
 def high_len(arr, arr_date):
     highestLen = arr[0]
     date_count = 0
-
+    date = 0
     for i in arr:
         date_count += 1
         if i > highestLen:
@@ -124,11 +191,11 @@ def bottom_25(arr):
 
 
 def standard_dev(arr):
-
     print("The standard deviation is", (statistics.stdev(arr)))
 
 
 def main():
+    print("The lowest date you can enter is 1995-06-16")
     table, arr, date_arr = graph()
     print(table)
     avg_len(arr)
